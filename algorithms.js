@@ -71,7 +71,7 @@ var BogoSort = {
     },
 
     Shuffle : function(array){
-        var n = array.length()
+        var n = array.length
         var i, j = n
 
         for (i = 0; i < array.length(); i++){
@@ -93,5 +93,100 @@ var BogoSort = {
     }
 }
 
+var CoctailSort = {
+    Sort : function(array) {
+        let swapped = true;
+        let start = 0;
+        let end = array.length;
+  
+        while (swapped == true) {
+            swapped = false;
+  
+            for (let i = start; i < end - 1; ++i) {
+                // change the colors of rectangles and dechange them
 
+                if (array[i] > array[i + 1]) {
+                    [ array[i], array[i+1] ] = [ array[i+1], array[i] ]
+                    swapped = true;
 
+                    // swap rectangles
+                }
+            }
+  
+            if (swapped == false)
+                break;
+
+            swapped = false;
+  
+            end = end - 1;
+  
+            for (let i = end - 1; i >= start; i--) {
+                // change the colors of rectangles and dechange them
+
+                if (array[i] > array[i + 1]) {
+                    [ array[i], array[i+1] ] = [ array[i+1], array[i] ]
+                    swapped = true;
+
+                    // swap rectangles
+                }
+            }
+  
+            start++
+        }
+    }
+}
+
+var InsertionSort = {
+    Sort : function (array) {
+        n = array.length
+        let i, key, j;  
+        for (i = 1; i < n; i++) {  
+            key = arr[i];  
+            j = i - 1;  
+    
+            while (j >= 0 && arr[j] > key) {
+                // flag that rectangle j and deflag it, and swap
+            
+                arr[j + 1] = arr[j];  
+                j = j - 1;  
+            }  
+
+            // change rectangles
+            arr[j + 1] = key;  
+        } 
+    }
+}
+
+var QuickSort = {
+
+    Partition : function(array, low, high) {
+        let pivot = arr[high];
+        let i = low - 1;
+        // flag pivot one in different color
+      
+        for (let j = low; j <= high - 1; j++) {
+            if (arr[j] < pivot) {
+                i++
+                // mark those rectangles in red and then demark them
+
+                [arr[i], arr[j]] = [arr[j], arr[i]]
+                
+                // swap rectangles
+            }
+        }
+      
+        [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]]
+
+        // deflag pivot
+        return i + 1
+    },
+    
+    Sort : function(array, low, high) {
+        if (low < high) {
+            let pi = Partition(array, low, high);
+      
+            quickSort(arr, low, pi - 1);
+            quickSort(arr, pi + 1, high);
+        }
+    }
+}
