@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="style.css">
+        <title>AlgoVisualizer</title>
+    </head>
+
+    <body>
+        <div class="containerForRectangles">
+            <h1>RectanglesHere</h1>
+        </div>
+
+        <div class="containerForMenu">
+            <h1>Algorithm Visualizer</h1>
+
+            <label for="algorithms">Solving algorithm: </label>
+            <select name="algorithms" id="algorithms">
+            <option value="MergeSort">MergeSort</option>
+            <option value="BubbleSort">BubbleSort</option>
+            <option value="BogoSort">BogoSort</option>
+            <option value="CoctailSort">CoctailSort</option>
+            <option value="InsertionSort">InsertionSort</option>
+            <option value="QuickSort">QuickSort</option>
+            </select>
+
+            <label for="sliderNOfArrayMembers">Number of array members: </label>
+            <div class="slidecontainer">
+                <input type="range" min="10" max="500" value="245" class="slider" id="sliderNOfArrayMembers">
+            </div>
+
+            <div id="numberOfArrMem">245</div>
+            <button id="sortBtn">Sort</button>
+            <button id="randomizeArrayBtn"><i class="fa-solid fa-shuffle"></i></button>
+        </div>
+
+        <script>
+            function ChangeNumberOfArrayMembers() {
+                var slider = document.getElementById("sliderNOfArrayMembers");
+                var output = document.getElementById("numberOfArrMem");
+                output.innerHTML = slider.value
+            }
+            const slider = document.querySelector("#sliderNOfArrayMembers");
+            slider.addEventListener("change", function() {
+                ChangeNumberOfArrayMembers()
+            }, false);
+        </script>
+        <script>
+            /*const copyBtn = document.querySelector("#coppyBtn");
+            copyBtn.addEventListener("click", ()=>{
+                const quoteElement = document.querySelector("#quote");
+                const quote = quoteElement.textContent;
+                navigator.clipboard.writeText(quote).then(()=>{alert("Quote is succesfully copied")})
+            })
+
+            const generateBtn = document.querySelector("#generateBtn");
+            generateBtn.addEventListener("click", ()=>{
+                GenerateQuote();
+            })*/
+        </script>
+
+        <script src="algotithms.js"></script>
+    </body>
+</html>
