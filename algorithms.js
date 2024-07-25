@@ -1,37 +1,72 @@
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+function MarkTwoRectanglesInRedAndWaitThenDemarkThem ( indexOne, indexTwo ) {
+    colorArray [indexOne] [1] = 0;
+    colorArray [indexOne] [2] = 0;
+    colorArray [indexTwo] [1] = 0;
+    colorArray [indexTwo] [2] = 0;
+
+    RenderRectangles();
+    sleep (4);
+
+    colorArray [indexOne] [1] = 255;
+    colorArray [indexOne] [2] = 255;
+    colorArray [indexTwo] [1] = 255;
+    colorArray [indexTwo] [2] = 255;
+}
+
+function SwapTwoRectangles ( indexOne, indexTwo ) {
+    [ unsortedArray[indexOne], unsortedArray [indexTwo] ] = [ unsortedArray[indexTwo], unsortedArray [indexOne] ]
+    [ colorArray[indexOne][0], colorArray [indexTwo][0] ] = [ colorArray[indexTwo][0], colorArray [indexOne][0] ]
+    [ colorArray[indexOne][1], colorArray [indexTwo][1] ] = [ colorArray[indexTwo][1], colorArray [indexOne][1] ]
+    [ colorArray[indexOne][2], colorArray [indexTwo][2] ] = [ colorArray[indexTwo][2], colorArray [indexOne][2] ]
+    RenderRectangles()
+    sleep(4);
+}
 var MergeSort = {
-    Merge : function ( arrayOne, arrayTwo ) {
+    Merge : function ( arrayOne, arrayTwo, indexOne, indexTwo ) {
         let sortedArray = []
 
         while( arrayOne.length && arrayTwo.length) {
 
-            // somewhere there mark two arrays ar 0 and slow down
-
-            //  somewhere there demark two arrays [0] 
+            MarkTwoRectanglesInRedAndWaitThenDemarkThem (indexOne, indexTwo) 
 
             if( arrayOne[0] < arrayTwo[0]){
                 sortedArray.push(arrayOne.shift())
+                indexOne++
             }
             else{
                 sortedArray.push(arrayTwo.shift())
+                indexTwo++
             }
         }
-
-        // and somewhere here find a way to change the heights of
-        // rectangles in the visualization in right places (replace
-        // those two arrays with a sorted one) and slow down
 
         return [...sortedArray, ...arrayOne, ...arrayTwo]
     },
 
-    Sort : function ( array ) {
+    MergeSort : function ( array, indexStart ) {
         if ( array.length < 1 ) return array
 
         let middlePoint = Math.floor( array.length / 2 )
 
-        let left = MergeSort( array.slice(0, middlePoint) )
-        let right = MergeSort( array.slice(middlePoint) )
+        let left = MergeSort.MergeSort( array.slice(0, middlePoint), indexStart )
+        let right = MergeSort.MergeSort( array.slice(middlePoint), indexStart + middlePoint )
 
-        return Merge( left, right );
+        let end = MergeSort.Merge( left, right, indexStart, indexStart + middlePoint );
+
+        for ( let i = indexStart; i < indexStart + end.length; i++ ) {
+            unsortedArray [i] = end [i - indexStart];
+            RenderRectangles();
+            sleep (4);
+        }
+
+        return end;
+    },
+
+    Sort : function ( array ) {
+        MergeSort (array, 0)
     }
 }
 
