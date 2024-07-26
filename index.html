@@ -15,8 +15,9 @@
     <div class="containerForMenu">
         <h1>Algorithm Visualizer</h1>
 
-        <label for="algorithms" id="algorithms">Solving algorithm: </label>
+        <label id="algorithmsLab">Solving algorithm: </label>
         <select name="algorithms" id="algorithms">
+            <option value="MergeSort">default</option>
             <option value="MergeSort">MergeSort</option>
             <option value="BubbleSort">BubbleSort</option>
             <option value="BogoSort">BogoSort</option>
@@ -29,8 +30,6 @@
         <div id="slidecontainer">
             <input type="range" id="sliderNOfArrayMembers" min="10" max="100" value="45">
         </div>
-
-        <div id="test">Upa</div>
 
         <span id="numberOfArrMem">45</span>
         <button id="sortBtn">Sort</button>

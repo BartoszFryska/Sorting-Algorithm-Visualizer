@@ -1,98 +1,123 @@
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
-  }
+}
 
-function MarkTwoRectanglesInRedAndWaitThenDemarkThem ( indexOne, indexTwo ) {
-    colorArray [indexOne] [1] = 0;
-    colorArray [indexOne] [2] = 0;
-    colorArray [indexTwo] [1] = 0;
-    colorArray [indexTwo] [2] = 0;
+async function EndingGreenFinish() {
+    for( let i = 0; i < unsortedArray.length; i++ ) {
+        colorArray[i] = [20, 255, 20];
+        RenderRectangles();
+        await sleep(40);
+        colorArray[i] = [255, 255, 255];
+    }
+
+    RenderRectangles(); // Finish
+    await sleep(80);
+
+    for( let i = 0; i < unsortedArray.length; i++ ) { // All in green
+        colorArray[i] = [20, 255, 20];
+    }
+    RenderRectangles();
+    await sleep(200);
+
+    for( let i = 0; i < unsortedArray.length; i++ ) { // All in white again
+        colorArray[i] = [255, 255, 255];
+    }
+    RenderRectangles();
+    await sleep(80);
+}
+
+async function MarkTwoRectanglesInRedAndWaitThenDemarkThem(indexOne, indexTwo) {
+    colorArray[indexOne] = [255, 0, 0];
+    colorArray[indexTwo] = [255, 0, 0];
 
     RenderRectangles();
-    sleep (4);
+    await sleep(40); // Adjust wait time for visibility
 
-    colorArray [indexOne] [1] = 255;
-    colorArray [indexOne] [2] = 255;
-    colorArray [indexTwo] [1] = 255;
-    colorArray [indexTwo] [2] = 255;
+    colorArray[indexOne] = [255, 255, 255];
+    colorArray[indexTwo] = [255, 255, 255];
+
+    RenderRectangles(); // Re-render to reset the color
 }
 
-function SwapTwoRectangles ( indexOne, indexTwo ) {
-    [ unsortedArray[indexOne], unsortedArray [indexTwo] ] = [ unsortedArray[indexTwo], unsortedArray [indexOne] ]
-    [ colorArray[indexOne][0], colorArray [indexTwo][0] ] = [ colorArray[indexTwo][0], colorArray [indexOne][0] ]
-    [ colorArray[indexOne][1], colorArray [indexTwo][1] ] = [ colorArray[indexTwo][1], colorArray [indexOne][1] ]
-    [ colorArray[indexOne][2], colorArray [indexTwo][2] ] = [ colorArray[indexTwo][2], colorArray [indexOne][2] ]
-    RenderRectangles()
-    sleep(4);
+async function SwapTwoRectangles(indexOne, indexTwo) {
+    //[unsortedArray[indexOne], unsortedArray[indexTwo]] = [unsortedArray[indexTwo], unsortedArray[indexOne]];
+    let temporary;
+    temporary = unsortedArray[indexOne];
+    unsortedArray[indexOne] = unsortedArray[indexTwo];
+    unsortedArray[indexTwo] = temporary;
+
+    RenderRectangles();
+    await sleep(40); // Adjust wait time for visibility
 }
+
 var MergeSort = {
-    Merge : function ( arrayOne, arrayTwo, indexOne, indexTwo ) {
-        let sortedArray = []
+    Merge: async function(arrayOne, arrayTwo, indexOne, indexTwo) {
+        let sortedArray = [];
 
-        while( arrayOne.length && arrayTwo.length) {
+        while (arrayOne.length && arrayTwo.length) {
+            await MarkTwoRectanglesInRedAndWaitThenDemarkThem(indexOne, indexTwo);
 
-            MarkTwoRectanglesInRedAndWaitThenDemarkThem (indexOne, indexTwo) 
-
-            if( arrayOne[0] < arrayTwo[0]){
-                sortedArray.push(arrayOne.shift())
-                indexOne++
-            }
-            else{
-                sortedArray.push(arrayTwo.shift())
-                indexTwo++
+            if (arrayOne[0] < arrayTwo[0]) {
+                sortedArray.push(arrayOne.shift());
+                indexOne++;
+            } else {
+                sortedArray.push(arrayTwo.shift());
+                indexTwo++;
             }
         }
 
-        return [...sortedArray, ...arrayOne, ...arrayTwo]
+        return [...sortedArray, ...arrayOne, ...arrayTwo];
     },
 
-    MergeSort : function ( array, indexStart ) {
-        if ( array.length < 1 ) return array
+    MergeSort: async function(array, indexStart) {
+        if (array.length <= 1) return array;
 
-        let middlePoint = Math.floor( array.length / 2 )
+        let middlePoint = Math.floor(array.length / 2);
 
-        let left = MergeSort.MergeSort( array.slice(0, middlePoint), indexStart )
-        let right = MergeSort.MergeSort( array.slice(middlePoint), indexStart + middlePoint )
+        let left = await MergeSort.MergeSort(array.slice(0, middlePoint), indexStart);
+        let right = await MergeSort.MergeSort(array.slice(middlePoint), indexStart + middlePoint);
 
-        let end = MergeSort.Merge( left, right, indexStart, indexStart + middlePoint );
+        let end = await MergeSort.Merge(left, right, indexStart, indexStart + middlePoint);
 
-        for ( let i = indexStart; i < indexStart + end.length; i++ ) {
-            unsortedArray [i] = end [i - indexStart];
+        for (let i = indexStart; i < indexStart + end.length; i++) {
+            unsortedArray[i] = end[i - indexStart];
             RenderRectangles();
-            sleep (4);
+            await sleep(40); // Adjust wait time for visibility
         }
 
         return end;
     },
 
-    Sort : function ( array ) {
-        MergeSort (array, 0)
+    Sort: async function(array) {
+        await MergeSort.MergeSort(array, 0);
+        await EndingGreenFinish();
     }
-}
+};
 
 var BubbleSort = {
-    Sort : function ( array ) {
-        var i, j
-        var swapped
+    Sort : async function ( array ) {
+        var swapped;
+        var n = array.length;
 
-        for (i = 0; i < n - 1; i++){
-            swapped = false
-            for (j = 0; j < n - i - 1; j++) 
-            {
-                // flag two rectangles with those indexes, wait and deflag them
+        for (let i = 0; i < n - 1; i++){
+            swapped = false;
+            for (let j = 0; j < n - i - 1; j++) {
+                await MarkTwoRectanglesInRedAndWaitThenDemarkThem( j, j+1 );
+                await sleep(40);
 
-                if (arr[j] > arr[j + 1]) 
-                {
-                    [array[i], array[j]] = [array[j], array[j]];
-                    swapped = true
+                if ( array[j] > array[j + 1] ) {
+                    [array[j], array[j+1]] = [array[j+1], array[j]];
+                    swapped = true;
 
-                    // swap rectangles in a visualization
+                    await SwapTwoRectangles( j, j+1 );
+                    await sleep (40);
                 }
             }
 
-            if (swapped == false) // if the array is sorted break
-            break
+            if (swapped == false) break; // if the array is sorted break
         }
+
+        await EndingGreenFinish();
     }
 }
 

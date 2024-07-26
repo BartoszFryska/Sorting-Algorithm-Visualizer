@@ -1,6 +1,6 @@
 let rectangleContainer = document.getElementById("containerForRectangles");
-let minRange = 1;
-let maxRange = 20;
+let minRange = 2;
+let maxRange = 30;
 let numberOfBars = 45;
 let unsortedArray = new Array(numberOfBars);
 let colorArray = new Array(numberOfBars).fill([255, 255, 255]);
@@ -29,8 +29,8 @@ function adjustContainerHeight() {
     RenderRectangles();
 }
 
-function RenderRectangles() { // Renders rectangles with height in array and color in colorArray
-    rectangleContainer.innerHTML = ''; // to clear out inner html  
+function RenderRectangles() { // Renders Rectangles
+    rectangleContainer.innerHTML = '';
     for (let i = 0; i < numberOfBars; i++) {
         let bar = document.createElement("div");
         bar.classList.add("bar");
@@ -42,7 +42,7 @@ function RenderRectangles() { // Renders rectangles with height in array and col
 }
 
 const randomizeArrayBtn = document.getElementById("randomizeArrayBtn");
-randomizeArrayBtn.addEventListener("click", function() { // Handles pressing the button for randomization
+randomizeArrayBtn.addEventListener("click", async function() { // Handles pressing the button for randomization
   if (isCalculating) return;  
   CreateRandomArray();
     RenderRectangles();
@@ -67,35 +67,34 @@ slider.addEventListener("input", function() { // Handling slider changes and in 
 });
 
 const selectAlgoDropdown = document.getElementById("algorithms");
-let chosenAlgorithm = "";
-selectAlgoDropdown.addEventListener("change", function () { // Handling choosing of algorithm
+let chosenAlgorithm = "default";
+selectAlgoDropdown.addEventListener("change", function() {
     chosenAlgorithm = selectAlgoDropdown.value;
 });
 
 const sortBtn = document.getElementById("sortBtn");
-sortBtn.addEventListener("click", function () { // Sorting button click handling
-  document.getElementById("test").textContent = chosenAlgorithm;  
+sortBtn.addEventListener("click", async function () { // Sorting button click handling
+  if(isCalculating) return;
   isCalculating = true;
   switch (chosenAlgorithm) {
         case "BubbleSort":
-            BubbleSort.Sort(unsortedArray);
+            await BubbleSort.Sort(unsortedArray);
             break;
         case "MergeSort":
-            MergeSort.Sort(unsortedArray);
+            await MergeSort.Sort(unsortedArray);
             break;
         case "BogoSort":
-            BogoSort.Sort(unsortedArray);
+            await BogoSort.Sort(unsortedArray);
             break;
         case "CoctailSort":
-            CoctailSort.Sort(unsortedArray);
+            await CoctailSort.Sort(unsortedArray);
             break;
         case "InsertionSort":
-            InsertionSort.Sort(unsortedArray);
+            await InsertionSort.Sort(unsortedArray);
             break;
         case "QuickSort":
-            QuickSort.Sort(unsortedArray);
+            await QuickSort.Sort(unsortedArray);
             break;
     }
-
     isCalculating = false;
 });
