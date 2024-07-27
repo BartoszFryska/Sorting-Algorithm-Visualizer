@@ -277,3 +277,140 @@ var QuickSort = {
         return array;
     }
 };
+
+var StalinSort = {
+    SendToGulag: async function (array, index) {
+        colorArray [index] = [255, 0, 0];
+        RenderRectangles();
+        await sleep (400);
+        array [index] = 0;
+        RenderRectangles();
+        sleep (80);
+    },
+
+    Sort: async function(array) {
+        var n = array.length;
+        var lastGoodOneIndex = 0;
+
+        for (var i = 1; i < n; i ++) {
+            await MarkTwoRectanglesInAColorWaitThenDemarkThem ( i, lastGoodOneIndex, 0, 0, 255 );
+
+            if ( array[lastGoodOneIndex] > array[i] ) {
+                await StalinSort.SendToGulag( array, i );
+                continue;
+            }
+
+            lastGoodOneIndex = i;
+            colorArray [lastGoodOneIndex] = [0, 255, 0];
+            RenderRectangles();
+            await sleep (400);
+            colorArray [lastGoodOneIndex] = [255, 255, 255];
+            RenderRectangles();
+        }
+
+        await EndingGreenFinish();
+        return array;
+    }
+};
+
+var SlowSort = {
+    SlowSort: async function(array, i, j) {
+        if (i >= j) return;
+    
+        let m = Math.floor((i + j) / 2);
+    
+        await SlowSort.SlowSort(array, i, m);
+        await SlowSort.SlowSort(array, m + 1, j);
+    
+        if (array[m] > array[j]) {
+            await MarkTwoRectanglesInAColorWaitThenDemarkThem (m, j, 255, 0, 0);
+            [array[m], array[j]] = [array[j], array[m]];
+            RenderRectangles();
+            await sleep(80);
+        }
+    
+        await SlowSort.SlowSort(array, i, j - 1);
+    },
+
+    Sort: async function(array) {
+        await SlowSort.SlowSort (array, 0, array.length - 1);
+
+        await EndingGreenFinish();
+    }
+};
+
+var BozoSort = {
+    IsSorted: async function (array) {
+        for (var i = 1; i < array.length; i++) {
+            await MarkTwoRectanglesInAColorWaitThenDemarkThem(i, i - 1, 0, 0, 102);
+            if (array[i] < array[i - 1]) {
+                await MakeAllRectanglesInAColorAndRender(50, 0, 0);
+                await sleep(400);
+                await MakeAllRectanglesInAColorAndRender(255, 255, 255);
+                await sleep(400);
+                return false;
+            }
+        }
+        return true;
+    },
+
+    SwapTwo: async function (array) {
+        var n = array.length;
+
+        var indexOne = Math.floor(Math.random() * n);
+        var indexTwo = Math.floor(Math.random() * n);
+        while (indexOne == indexTwo) {
+            indexTwo = Math.floor(Math.random() * n);
+        }
+
+        await MarkTwoRectanglesInAColorWaitThenDemarkThem(indexOne, indexTwo, 255, 0, 0);
+
+        [array[indexOne], array[indexTwo]] = [array[indexTwo], array[indexOne]];
+        await sleep(200);
+
+        return array;
+    },
+
+    Sort: async function (array) {
+        while (!(await BozoSort.IsSorted(array))) {
+            array = await BozoSort.SwapTwo(array);
+        }
+        await MakeAllRectanglesInAColorAndRender(0, 255, 0); // Mark sorted array in green
+    }
+};
+
+var SelectionSort = {
+    Sort: async function(array){
+    var n = array.length;
+
+    for (var i = 0; i < n-1; i++){
+        
+        colorArray [i] = [218,165,32];
+        RenderRectangles();
+        await sleep (80);
+
+        var minIndex = i;
+
+        for (var j = i + 1; j < n; j++) {
+            await MarkTwoRectanglesInAColorWaitThenDemarkThem (minIndex, j, 0, 0, 102);
+            colorArray [i] = [218,165,32];
+            RenderRectangles();
+            await sleep (80);
+
+            if (array[j] < array[minIndex]){
+                minIndex = j;
+            }
+        }
+
+        colorArray [i] = [255, 255, 255];
+        RenderRectangles ();
+        await sleep (80);
+
+        MarkTwoRectanglesInAColorWaitThenDemarkThem (minIndex, i, 255, 0, 0);
+        [ array[minIndex], array[i] ] = [ array[i], array[minIndex] ];
+        RenderRectangles();
+        await sleep(80);
+    }
+}
+
+}

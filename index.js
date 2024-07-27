@@ -1,7 +1,7 @@
 let rectangleContainer = document.getElementById("containerForRectangles");
 let minRange = 2;
-let maxRange = 30;
-let numberOfBars = 45;
+let maxRange = 40;
+let numberOfBars = 68;
 let unsortedArray = new Array(numberOfBars);
 let colorArray = new Array(numberOfBars).fill([255, 255, 255]);
 let isCalculating = false
@@ -94,6 +94,18 @@ sortBtn.addEventListener("click", async function () { // Sorting button click ha
             break;
         case "QuickSort":
             await QuickSort.Sort(unsortedArray);
+            break;
+        case "StalinSort":
+            await StalinSort.Sort(unsortedArray);
+            break;
+        case "SlowSort":
+            await SlowSort.Sort(unsortedArray);
+            break;
+        case "BozoSort":
+            await BozoSort.Sort(unsortedArray);
+            break;
+        case "SelectionSort":
+            await SelectionSort.Sort(unsortedArray);
             break;
     }
     isCalculating = false;
