@@ -107,6 +107,9 @@ sortBtn.addEventListener("click", async function () { // Sorting button click ha
         case "SelectionSort":
             await SelectionSort.Sort(unsortedArray);
             break;
+        case "HeapSort":
+            await HeapSort.Sort(unsortedArray);
+            break;
     }
     isCalculating = false;
 });

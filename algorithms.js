@@ -29,18 +29,24 @@ async function MarkTwoRectanglesInAColorWaitThenDemarkThem(indexOne, indexTwo, R
     colorArray[indexTwo] = [R, G, B];
 
     RenderRectangles();
-    await sleep(40); // Adjust wait time for visibility
+    await sleep(40);
 
     colorArray[indexOne] = [255, 255, 255];
     colorArray[indexTwo] = [255, 255, 255];
 
-    RenderRectangles(); // Re-render to reset the color
+    RenderRectangles();
 }
 
 async function SwapTwoRectanglesRenderAndSleep(indexOne, indexTwo) {
     [unsortedArray[indexOne], unsortedArray[indexTwo]] = [unsortedArray[indexTwo], unsortedArray[indexOne]];
     [colorArray[indexOne], colorArray[indexTwo]] = [colorArray[indexTwo], colorArray[indexOne]];
 
+    RenderRectangles();
+    await sleep(40);
+}
+
+async function MarkOneRectangleInAColorAndRender(index, R, G, B) {
+    colorArray[index] = [R, G, B];
     RenderRectangles();
     await sleep(40);
 }
@@ -381,36 +387,80 @@ var BozoSort = {
 
 var SelectionSort = {
     Sort: async function(array){
-    var n = array.length;
+        var n = array.length;
 
-    for (var i = 0; i < n-1; i++){
-        
-        colorArray [i] = [218,165,32];
-        RenderRectangles();
-        await sleep (80);
-
-        var minIndex = i;
-
-        for (var j = i + 1; j < n; j++) {
-            await MarkTwoRectanglesInAColorWaitThenDemarkThem (minIndex, j, 0, 0, 102);
+        for (var i = 0; i < n-1; i++){
+            
             colorArray [i] = [218,165,32];
             RenderRectangles();
             await sleep (80);
 
-            if (array[j] < array[minIndex]){
-                minIndex = j;
+            var minIndex = i;
+
+            for (var j = i + 1; j < n; j++) {
+                await MarkTwoRectanglesInAColorWaitThenDemarkThem (minIndex, j, 0, 0, 102);
+                colorArray [i] = [218,165,32];
+                RenderRectangles();
+                await sleep (80);
+
+                if (array[j] < array[minIndex]){
+                    minIndex = j;
+                }
             }
+
+            colorArray [i] = [255, 255, 255];
+            RenderRectangles ();
+            await sleep (80);
+
+            MarkTwoRectanglesInAColorWaitThenDemarkThem (minIndex, i, 255, 0, 0);
+            [ array[minIndex], array[i] ] = [ array[i], array[minIndex] ];
+            RenderRectangles();
+            await sleep(80);
         }
 
-        colorArray [i] = [255, 255, 255];
-        RenderRectangles ();
-        await sleep (80);
+    await EndingGreenFinish();
+}
 
-        MarkTwoRectanglesInAColorWaitThenDemarkThem (minIndex, i, 255, 0, 0);
-        [ array[minIndex], array[i] ] = [ array[i], array[minIndex] ];
-        RenderRectangles();
-        await sleep(80);
+}
+
+var HeapSort = {
+    Heapify: async function (array, N, i){
+        var largest = i;
+        var l = 2 * i + 1;
+        var r = 2 * i + 2;
+
+        await MarkOneRectangleInAColorAndRender (i, 218, 165, 32);
+        await MarkTwoRectanglesInAColorWaitThenDemarkThem (l, r, 0, 0, 255);
+        await MarkOneRectangleInAColorAndRender (i, 255, 255, 255);
+
+        if (l < N && array[l] > array[largest])
+            largest = l;
+
+        if (r < N && array[r] > array[largest])
+            largest = r;
+
+        if (largest != i) {
+            [ array[i], array[largest] ] = [ array[largest], array[i] ];
+            RenderRectangles();
+            await sleep (80);
+
+            await HeapSort.Heapify(array, N, largest);
+        }
+    },
+
+    Sort: async function (array) {
+        var N = array.length;
+
+        for (var i = Math.floor(N / 2) - 1; i >= 0; i--)
+            await HeapSort.Heapify(array, N, i);
+
+        for (var i = N - 1; i > 0; i--) {
+            await MarkTwoRectanglesInAColorWaitThenDemarkThem (0, i, 255, 0, 0);
+            [ array[0], array[i] ] = [ array[i], array[0] ];
+            RenderRectangles();
+            await sleep (200);
+
+            await HeapSort.Heapify(array, i, 0);
+        }
     }
-}
-
-}
+};
